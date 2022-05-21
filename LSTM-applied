@@ -1,0 +1,117 @@
++import pandas as pd
++df=pd.read_excel('path/path/path')
++#Install missingness analysis program
++pip install missingno
++#Import library
++import missingno as msno
++df.isna().sum()
++#Plot missingness graphs
++#msno.bar(df)
++msno.matrix(df)
++msno.heatmap(df)
++msno.dendrogram(df)
++dft=df['Text']
++from sklearn.feature_extraction.text import TfidfVectorizer
++dft2 = dft.to_frame()
++dft2.dropna(subset = ['Text'], inplace = True)
++#Vectorize with tf-idf
++#Import the dataset from sklearn
++from sklearn.datasets import fetch_20newsgroups
++from sklearn.feature_extraction.text import TfidfVectorizer
++from sklearn.cluster import KMeans
++from sklearn.decomposition import PCA
+
++#Import other required libs
++import pandas as pd
++import numpy as np
+
++#String manipulation libs
++import re
++import string
++import nltk
++from nltk.corpus import stopwords
+
++#Viz libs
++import matplotlib.pyplot as plt
++import seaborn as sns
++#Drop unwanted columns
++df1=df.drop(['ID', 'Title','Text_resized_2', 'Embedded URLs',
+       'Actual_URLs', 'Subject', 'Date', 'Month', 'Month words', 'Entity',
+       'Likes', 'Flagged_in_fact_checker_sites',
+       'Account_Holder_Profile_Genuine', 'Category', 'Label'],axis = 1)
++#Create preprocessing script
++def preprocess_text(text: str, remove_stopwords: bool) -> str:
++    """This utility function sanitizes a string by:
++    - removing links
++    - removing special characters
++    - removing numbers
++    - removing stopwords
++    - transforming in lowercase
++    - removing excessive whitespaces
++   Args:
++        text (str): the input text you want to clean
++        remove_stopwords (bool): whether or not to remove stopwords
++    Returns:
++        str: the cleaned text
++    """
+
++    # remove links
++    text = re.sub(r"http\S+", "", text)
++    # remove special chars and numbers
++    text = re.sub("[^A-Za-z]+", " ", text)
++   # remove stopwords
++   if remove_stopwords:
++        # 1. tokenize
++        tokens = nltk.word_tokenize(text)
++        # 2. check if stopword
++        tokens = [w for w in tokens if not w.lower() in stopwords.words("english")]
++        # 3. join back together
++        text = " ".join(tokens)
++    # return text in lower case and stripped of whitespaces
++    text = text.lower().strip()
++    return text
+    
++#Clean text and remove panctuation
++df['cleaned'] = df['Posts'].apply(lambda x: preprocess_text(x, remove_stopwords=True))
++# initialize the vectorizer
++vectorizer = TfidfVectorizer(sublinear_tf=True, min_df=5, max_df=0.95)
++# fit_transform applies TF-IDF to clean texts - we save the array of vectors in X
++X = vectorizer.fit_transform(df['cleaned'])
++#Extract words aka ‘feature names’ from vectorizer
++feature_names = vectorizer.get_feature_names()
++#Create a dense matrix to convert into a list, and finally a dataframe.
++dense = X.todense()
++denselist = dense.tolist()
++df2 = pd.DataFrame(denselist, columns=feature_names)
++#Split the dense matrix to enable easy export to excel and reduce compute time
++df4=df2.iloc[:,1001:2001]
++df5=df2.iloc[:,2001:3001]
++df6=df2.iloc[:,3002:4001]
++df7=df2.iloc[:,4002:5001]
++df8=df2.iloc[:,5002:6001]
++df9=df2.iloc[:,6002:7001]
++df10=df2.iloc[:,7002:8001]
++df11=df2.iloc[:,8002:9001]
++df12=df2.iloc[:,9002:10001]
++df13=df2.iloc[:,10002:11001]
++df14=df2.iloc[:,11002:12001]
++df15=df2.iloc[:,12002:13001]
++df16=df2.iloc[:,13002:14001]
++df17=df2.iloc[:,14002:15001]
++df4.to_excel(r'path\path\path', index = False)
++df5.to_excel(r'path\path\path', index = False)
++df6.to_excel(r'path\path\path', index = False)
++df7.to_excel(r'path\path\path', index = False)
++df8.to_excel(r'path\path\path', index = False)
++df9.to_excel(r'path\path\path', index = False)
++df10.to_excel(r'path\path\path', index = False)
++df11.to_excel(r'path\path\path', index = False)
++df12.to_excel(r'path\path\path', index = False)
++df13.to_excel(r'path\path\path', index = False)
++df14.to_excel(r'path\path\path', index = False)
++df15.to_excel(r'path\path\path', index = False)
++df16.to_excel(r'path\path\path', index = False)
++df17.to_excel(r'path\path\path', index = False)
++
++
++
